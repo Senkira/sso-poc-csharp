@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.log
+logs/
+.runtime/
+data/
+src/SsoGeminiLogin.Api/data/
+appsettings.Local.json

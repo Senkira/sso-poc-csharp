@@ -1,0 +1,22 @@
+@model ErrorViewModel
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ไม่สามารถดำเนินการได้</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="login-body">
+    <main class="login-shell">
+        <section class="login-card" role="alert">
+            <p class="login-eyebrow">ERROR @Model.StatusCode</p>
+            <h1>ไม่สามารถดำเนินการได้</h1>
+            <p>@Model.Message</p>
+            <p>Trace ID: <code>@Model.TraceId</code></p>
+            <a class="primary-button" asp-controller="Account" asp-action="Login">กลับหน้าหลัก</a>
+        </section>
+    </main>
+</body>
+</html>
+

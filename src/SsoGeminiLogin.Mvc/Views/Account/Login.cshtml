@@ -1,0 +1,42 @@
+@model LoginViewModel
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SSO Login</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="login-body">
+    <main class="login-shell">
+        <section class="login-card">
+            <p class="login-eyebrow">SSO SIGN IN</p>
+            <h1>เข้าสู่ระบบ</h1>
+            <p class="login-description">กรอกบัญชี SSO เพื่อเข้าสู่หน้าทดลอง</p>
+
+            <form class="login-form" method="post" asp-controller="Account" asp-action="Login">
+                <label>
+                    Username
+                    <input asp-for="Username" name="username" autocomplete="username" autofocus />
+                </label>
+                <label>
+                    Password
+                    <input asp-for="Password" name="password" autocomplete="current-password" />
+                </label>
+                @if (Model.InvalidCredentials)
+                {
+                    <p class="login-error">Username หรือ Password ไม่ถูกต้อง</p>
+                }
+                <button class="primary-button" type="submit">เข้าสู่ระบบ</button>
+            </form>
+        </section>
+
+        <aside class="test-note">
+            <strong>ข้อมูลสำหรับทดสอบ</strong>
+            <p>Username: <code>ssotest01</code></p>
+            <p>Password: <code>123456</code></p>
+        </aside>
+    </main>
+</body>
+</html>
+

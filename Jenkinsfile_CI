@@ -1,0 +1,42 @@
+pipeline {
+    agent { label 'windows-dotnet10' }
+
+    environment {
+        DOTNET_NOLOGO = 'true'
+        DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+        NUGET_XMLDOC_MODE = 'skip'
+    }
+
+    stages {
+        stage('Restore') {
+            steps {
+                bat 'dotnet restore SsoGeminiLogin.Api.sln --locked-mode'
+                bat 'dotnet restore SsoGeminiLogin.Mvc.sln --locked-mode'
+            }
+        }
+        stage('Build') {
+            steps {
+                bat 'dotnet build SsoGeminiLogin.Api.sln -c Release --no-restore'
+                bat 'dotnet build SsoGeminiLogin.Mvc.sln -c Release --no-restore'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'dotnet test SsoGeminiLogin.Api.sln -c Release --no-build --logger "trx"'
+                bat 'dotnet test SsoGeminiLogin.Mvc.sln -c Release --no-build --logger "trx"'
+            }
+        }
+        stage('Format') {
+            steps {
+                bat 'dotnet format SsoGeminiLogin.Api.sln --verify-no-changes --no-restore'
+                bat 'dotnet format SsoGeminiLogin.Mvc.sln --verify-no-changes --no-restore'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/TestResults/*.trx', allowEmptyArchive: true
+        }
+    }
+}

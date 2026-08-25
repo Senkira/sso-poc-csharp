@@ -1,0 +1,56 @@
+@model ViewerViewModel
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  </head>
+  <body>
+    <header class="broker-bar">
+      <button id="end-session" class="ghost-button" type="button">สิ้นสุด Session</button>
+    </header>
+
+    <main class="broker-layout">
+      <section class="pipeline-panel" aria-label="Login pipeline">
+        <div class="pipeline-heading">
+          <div><strong>Realtime Login Pipeline</strong><small>เทา = รอ · เขียว = กำลังทำ · ฟ้า = ผ่านแล้ว</small></div>
+          <span id="pipeline-summary">กำลังเริ่มต้น...</span>
+        </div>
+        <div class="pipeline-scroll">
+          <ol class="pipeline" id="pipeline">
+            <li class="pipeline-node pending" data-step="0"><span>1</span><div><strong>SSO Verified</strong><code>POST /sso/login</code><small>ตรวจ test SSO และออก Broker cookie</small></div></li>
+            <li class="pipeline-node pending" data-step="1"><span>2</span><div><strong>Identity Map</strong><code>GET /api/v1/me</code><small>อ่าน SSO owner และ mapped account</small></div></li>
+            <li class="pipeline-node pending" data-step="2"><span>3</span><div><strong>Broker Session</strong><code>POST /api/v1/browser-sessions</code><small>สร้าง opaque session ID</small></div></li>
+            <li class="pipeline-node pending" data-step="3"><span>4</span><div><strong>Agent IPC</strong><code>start(accountId)</code><small>ส่ง account reference ไป Local Agent</small></div></li>
+            <li class="pipeline-node pending" data-step="4"><span>5</span><div><strong>Edge Profile</strong><code>launchPersistentContext()</code><small>เปิด isolated Edge profile</small></div></li>
+            <li class="pipeline-node pending" data-step="5"><span>6</span><div><strong>Google Login</strong><code>email → password → session</code><small>สร้าง Google session เบื้องหลัง</small></div></li>
+            <li class="pipeline-node pending" data-step="6"><span>7</span><div><strong>Browser Handoff</strong><code>POST /{sessionId}/open</code><small>เปิด Edge หน้าจริงด้วย profile เดิม</small></div></li>
+            <li class="pipeline-node pending" data-step="7"><span>8</span><div><strong>Success</strong><code>status: handed-off</code><small>Login สำเร็จและพร้อมใช้งาน</small></div></li>
+          </ol>
+        </div>
+        <div class="pipeline-log" id="pipeline-log" aria-live="polite"></div>
+      </section>
+
+      <section class="viewer-panel">
+        <div class="viewer-toolbar">
+          <div><i id="worker-dot"></i><span id="worker-status">ยังไม่ได้เริ่ม</span></div>
+          <div class="account-label"><small>Mapped account</small><strong id="mapped-account">—</strong></div>
+        </div>
+
+        <div class="viewer-stage" id="viewer-stage" tabindex="0" aria-label="Gemini browser launcher">
+          <div class="viewer-empty" id="viewer-empty">
+            <span class="secure-mark">◇</span>
+            <h1>Secure Browser พร้อมเริ่มทำงาน</h1>
+            <p>Local Browser Agent จะ login เบื้องหลัง แล้วเปิด Gemini ใน Microsoft Edge หน้าจริง</p>
+            <button id="start-browser" class="primary-button" type="button">เปิด Gemini Chat</button>
+            <small id="start-error"></small>
+          </div>
+        </div>
+      </section>
+
+    </main>
+    <script src="~/js/viewer.js" asp-append-version="true" defer></script>
+  </body>
+</html>
